@@ -18,7 +18,7 @@ function comparePasswordWithHash(providedPw, hashedPw) {
     );
 }
 function getAccessToken(userId) {
-    return jwt.sign({ id: userId }.config.secret, {
+    return jwt.sign({ id: userId },config.secret, {
         expiresIn: 86400 // 24 hours
     });
 }

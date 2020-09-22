@@ -24,7 +24,7 @@ verifyToken = (req, res, next) => {
 };
 
 isAdmin = (req, res, next) => {
-    User.findByPk(res.userId).then(user => {
+    User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
             if (containsRole(roles, "admin")) {
                 next();
@@ -38,7 +38,7 @@ isAdmin = (req, res, next) => {
     });
 };
 isModerator = (req, res, next) => {
-    User.findByPk(res.userId).then(user => {
+    User.findByPk(req.userId).then(user => {
         user.getRoles().then(roles => {
             if (containsRole(roles, "moderator")) {
                 next();
