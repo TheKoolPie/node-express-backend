@@ -18,16 +18,13 @@ function comparePasswordWithHash(providedPw, hashedPw) {
     );
 }
 function getAccessToken(userId) {
-    return jwt.sign({ id: userId },config.secret, {
+    return jwt.sign({ id: userId }, config.secret, {
         expiresIn: 86400 // 24 hours
     });
 }
 function getAuthorities(roles) {
     var authorities = [];
-    for (let i = 0; i < roles.length; i++) {
-        authorities.push("ROLE_" + roles[i].name.toUpperCase());
-    }
-    return authorities;
+
 }
 
 exports.signup = (req, res) => {
@@ -80,15 +77,22 @@ exports.signin = (req, res) => {
             }
 
             var token = getAccessToken(user.id);
-            var authorities = getAuthorities(user.getRoles());
 
-            res.status(200).send({
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                roles: authorities,
-                accessToken: token
+            var authorities = [];
+            user.getRoles().then(roles => {
+                for (let i = 0; i < roles.length; i++) {
+                    authorities.push("ROLE_" + roles[i].name.toUpperCase());
+                }
+                res.status(200).send({
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    roles: authorities,
+                    accessToken: token
+                });
             });
+
+
         }).catch(err => {
             res.status(500).send({ message: err.message });
         });
